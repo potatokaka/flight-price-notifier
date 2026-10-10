@@ -1,29 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Flight Price Notifier 機票降價通知" },
-      {
-        name: "description",
-        content:
-          "設定台北出發的航線與目標價，票價一降到你的預算，我們就寄 email 通知你。",
-      },
-      { property: "og:title", content: "Flight Price Notifier 機票降價通知" },
-      {
-        property: "og:description",
-        content:
-          "設定台北出發的航線與目標價，票價一降到你的預算，我們就寄 email 通知你。",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: Landing,
-});
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const features = [
   {
@@ -43,7 +22,12 @@ const features = [
   },
 ];
 
-function Landing() {
+export default function Landing() {
+  usePageMeta({
+    title: "Flight Price Notifier 機票降價通知",
+    description:
+      "設定台北出發的航線與目標價，票價一降到你的預算，我們就寄 email 通知你。",
+  });
   return (
     <div className="flex min-h-screen flex-col hero-surface">
       <SiteHeader />

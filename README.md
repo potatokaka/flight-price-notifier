@@ -22,3 +22,28 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Architecture
+
+Plain **Vite + React** single-page app — no SSR, no server runtime.
+
+- Routing: [React Router](https://reactrouter.com) (`src/App.tsx`) — `/`, `/app`, `/signin`, `/signup`
+- Auth: Supabase JS client in the browser (`src/integrations/supabase/client.ts`)
+- Styling: Tailwind CSS v4 (`src/styles.css`)
+
+```sh
+bun install        # or npm i
+bun run dev        # http://localhost:5173
+bun run build      # static output in dist/
+bun run preview    # serve dist/ locally
+```
+
+Required env vars (inlined at build time): `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`.
+
+## Deploy to Vercel
+
+Import the repo in Vercel — `vercel.json` sets the Vite framework preset, `dist/` output,
+and a catch-all rewrite to `index.html` so deep links like `/app` resolve client-side.
+Add the two `VITE_SUPABASE_*` variables under Project → Settings → Environment Variables,
+and add your Vercel domain (e.g. `https://<project>.vercel.app/app`) to the Supabase Auth
+redirect URL allow-list so sign-up confirmation emails land correctly.

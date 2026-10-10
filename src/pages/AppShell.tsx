@@ -1,40 +1,26 @@
 import { useEffect } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthState } from "@/hooks/useAuthState";
 import { SiteFooter } from "@/components/SiteFooter";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
-export const Route = createFileRoute("/app")({
-  head: () => ({
-    meta: [
-      { title: "Dashboard | Flight Price Notifier" },
-      {
-        name: "description",
-        content: "你的航線追蹤儀表板 — Flight Price Notifier 會在票價達標時寄信通知你。",
-      },
-      { property: "og:title", content: "Dashboard | Flight Price Notifier" },
-      {
-        property: "og:description",
-        content: "你的航線追蹤儀表板 — Flight Price Notifier 會在票價達標時寄信通知你。",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: AppShell,
-});
-
-function AppShell() {
+export default function AppShell() {
+  usePageMeta({
+    title: "Dashboard | Flight Price Notifier",
+    description:
+      "你的航線追蹤儀表板 — Flight Price Notifier 會在票價達標時寄信通知你。",
+  });
   const { user, loading } = useAuthState();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/signin" });
+    if (!loading && !user) navigate("/signin");
   }, [loading, user, navigate]);
 
   async function handleSignOut() {
     await supabase.auth.signOut();
-    navigate({ to: "/" });
+    navigate("/");
   }
 
   return (
