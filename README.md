@@ -38,7 +38,13 @@ bun run build      # static output in dist/
 bun run preview    # serve dist/ locally
 ```
 
-Required env vars (inlined at build time): `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`.
+Backend: the project's own Supabase project (`pzfftktblqxjdrsfeiit`). Required env vars
+(inlined at build time, see `.env.example`):
+
+```sh
+VITE_SUPABASE_URL="https://pzfftktblqxjdrsfeiit.supabase.co"
+VITE_SUPABASE_PUBLISHABLE_KEY="sb_publishable_..."   # browser-safe, RLS-gated (replaces the old anon key)
+```
 
 ## Deploy to Vercel
 
