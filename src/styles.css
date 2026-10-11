@@ -121,6 +121,11 @@
       "SOFT" 100,
       "opsz" 96;
     letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   :focus-visible {
