@@ -5,8 +5,15 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Flight Price Notifier design system — dark, near-black canvas with a
- * violet accent. All colors are oklch tokens; never hardcode colors in JSX.
+ * Flight Price Notifier design system — "moonlit snowfield".
+ * A grainy cerulean sky with a crescent moon, resting on soft snow.
+ *
+ * Two token scopes:
+ *   - Sky  (:root)                         white text, moon-white buttons
+ *   - Snow (.card-surface, .snow-hill,
+ *           .snow-ground)                  navy ink, sky-blue buttons
+ * Components only use tokens, so the same markup reads correctly on either.
+ * All colors are tokens; never hardcode colors in JSX.
  */
 
 @theme inline {
@@ -16,7 +23,8 @@
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", "Noto Sans TC", ui-serif, Georgia, serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -40,42 +48,63 @@
 }
 
 :root {
-  --radius: 0.875rem;
-  --background: oklch(0.16 0.02 285);
-  --foreground: oklch(0.97 0.005 285);
-  --card: oklch(0.21 0.025 286);
-  --card-foreground: oklch(0.97 0.005 285);
-  --popover: oklch(0.21 0.025 286);
-  --popover-foreground: oklch(0.97 0.005 285);
-  --primary: oklch(0.62 0.21 295);
-  --primary-foreground: oklch(0.99 0.002 285);
-  --primary-glow: oklch(0.72 0.17 305);
-  --secondary: oklch(0.26 0.03 286);
-  --secondary-foreground: oklch(0.97 0.005 285);
-  --muted: oklch(0.26 0.03 286);
-  --muted-foreground: oklch(0.72 0.02 286);
-  --accent: oklch(0.3 0.06 292);
-  --accent-foreground: oklch(0.97 0.005 285);
-  --destructive: oklch(0.62 0.21 25);
-  --destructive-foreground: oklch(0.99 0.002 285);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 14%);
-  --ring: oklch(0.62 0.21 295);
+  /* Palette */
+  --sky-high: #1f64ae;
+  --sky-mid: #3479c2;
+  --sky-horizon: #7fb3e4;
+  --snow: #f8fafc;
+  --snow-shade: #dde6ef;
+  --ink: #17324f;
+  --ink-soft: #4f6782;
+  --moon: #ffffff;
 
-  --gradient-hero: radial-gradient(
-      60% 60% at 50% 0%,
-      color-mix(in oklab, var(--primary) 28%, transparent),
-      transparent 70%
-    ),
-    linear-gradient(180deg, oklch(0.18 0.03 288), var(--background));
-  --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
-  --shadow-glow: 0 18px 60px -20px color-mix(in oklab, var(--primary) 60%, transparent);
-  --shadow-card: 0 12px 40px -24px oklch(0 0 0 / 80%);
+  --radius: 1.25rem;
+
+  /* Sky scope (default) */
+  --background: #2a6eb8;
+  --foreground: var(--moon);
+  --card: var(--snow);
+  --card-foreground: var(--ink);
+  --popover: var(--snow);
+  --popover-foreground: var(--ink);
+  --primary: var(--moon);
+  --primary-foreground: var(--ink);
+  --primary-glow: #e4f0fb;
+  --secondary: rgb(255 255 255 / 14%);
+  --secondary-foreground: var(--moon);
+  --muted: rgb(255 255 255 / 12%);
+  --muted-foreground: rgb(255 255 255 / 86%);
+  --accent: rgb(255 255 255 / 16%);
+  --accent-foreground: var(--moon);
+  --destructive: #d64545;
+  --destructive-foreground: var(--moon);
+  --border: rgb(255 255 255 / 24%);
+  --input: rgb(255 255 255 / 30%);
+  --ring: var(--moon);
+
+  --gradient-sky: linear-gradient(
+    180deg,
+    var(--sky-high) 0%,
+    var(--sky-mid) 45%,
+    var(--sky-horizon) 100%
+  );
+  --gradient-primary: linear-gradient(180deg, var(--moon), #eaf3fc);
+  --gradient-title: linear-gradient(180deg, var(--moon) 30%, #d9eafa);
+  --gradient-snow: linear-gradient(180deg, var(--snow) 0%, var(--snow) 55%, var(--snow-shade) 100%);
+  --shadow-glow: 0 10px 30px -12px rgb(255 255 255 / 55%);
+  --shadow-card: 0 24px 48px -30px rgb(23 62 110 / 55%);
+
+  /* Film grain, as in a risograph print */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @layer base {
   * {
     border-color: var(--color-border);
+  }
+
+  html {
+    background-color: var(--sky-high);
   }
 
   body {
@@ -84,29 +113,151 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
+
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    font-variation-settings:
+      "SOFT" 100,
+      "opsz" 96;
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
 }
 
+/* The page: a grainy sky with a crescent moon. */
 @utility hero-surface {
-  background-image: var(--gradient-hero);
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  background-image: var(--gradient-sky);
+  background-attachment: fixed;
+
+  &::before {
+    /* Crescent moon */
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: clamp(84px, 13vh, 132px);
+    right: clamp(24px, 14vw, 220px);
+    width: clamp(44px, 6vw, 72px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--moon);
+    -webkit-mask-image: radial-gradient(circle at 30% 34%, transparent 47%, #000 48%);
+    mask-image: radial-gradient(circle at 30% 34%, transparent 47%, #000 48%);
+    transform: rotate(-18deg);
+    filter: drop-shadow(0 0 18px rgb(255 255 255 / 45%));
+    pointer-events: none;
+  }
+
+  &::after {
+    /* Grain over everything, very quietly */
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background-image: var(--grain);
+    opacity: 0.16;
+    mix-blend-mode: soft-light;
+    pointer-events: none;
+  }
+}
+
+/* A broad snowy hill that features sit on. */
+@utility snow-hill {
+  position: relative;
+  isolation: isolate;
+  margin-top: clamp(48px, 8vw, 96px);
+  padding-top: clamp(40px, 6vw, 72px);
+  background: var(--gradient-snow);
+  --background: var(--snow);
+  --foreground: var(--ink);
+  --muted-foreground: var(--ink-soft);
+  --border: #d6e0ea;
+  --primary-glow: #2c6db0;
+  color: var(--ink);
+
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    top: clamp(-90px, -9vw, -48px);
+    width: 160%;
+    height: clamp(140px, 22vw, 260px);
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: var(--snow);
+  }
+}
+
+/* Snow ridge at the foot of every page. */
+@utility snow-ground {
+  position: relative;
+  isolation: isolate;
+  background: var(--snow-shade);
+  --foreground: var(--ink);
+  --muted-foreground: var(--ink-soft);
+  --border: transparent;
+  color: var(--ink);
+
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    top: -36px;
+    width: 140%;
+    height: 120px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: linear-gradient(180deg, var(--snow), var(--snow-shade) 60%);
+  }
 }
 
 @utility gradient-text {
-  background-image: var(--gradient-primary);
+  background-image: var(--gradient-title);
   background-clip: text;
   color: transparent;
+  font-weight: 400;
 }
 
 @utility btn-primary {
   background-image: var(--gradient-primary);
-  color: var(--color-primary-foreground);
+  color: var(--primary-foreground);
   box-shadow: var(--shadow-glow);
   transition:
     transform 0.2s ease,
     filter 0.2s ease;
 }
 
+/* Cards are snow: tokens re-pointed to navy ink and sky-blue buttons. */
 @utility card-surface {
-  background-color: var(--color-card);
+  --background: var(--snow);
+  --foreground: var(--ink);
+  --primary: var(--sky-mid);
+  --primary-foreground: var(--moon);
+  --primary-glow: #2c6db0;
+  --secondary: #eef3f8;
+  --secondary-foreground: var(--ink);
+  --muted: #eef3f8;
+  --muted-foreground: var(--ink-soft);
+  --accent: #e8f0f8;
+  --accent-foreground: var(--ink);
+  --destructive: #c23b3b;
+  --destructive-foreground: #9b2222;
+  --border: #d6e0ea;
+  --input: #cbd7e3;
+  --ring: var(--sky-mid);
+  --gradient-primary: linear-gradient(180deg, #3a84cc, #2c6db0);
+  --shadow-glow: 0 12px 26px -14px rgb(31 100 174 / 70%);
+  color: var(--ink);
+  background-color: var(--snow);
   box-shadow: var(--shadow-card);
 }
 
@@ -121,4 +272,10 @@
 @utility reveal-visible {
   opacity: 1;
   transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transition: none;
+  }
 }

@@ -70,23 +70,25 @@ export default function Landing() {
           </Reveal>
         </section>
 
-        <section className="mx-auto max-w-6xl px-5 pb-28">
-          <div className="grid gap-6 md:grid-cols-3">
-            {features.map((feature, index) => (
-              <Reveal key={feature.title} delay={index * 120}>
-                <article className="h-full card-surface rounded-2xl border border-border/60 p-7 transition-transform duration-300 hover:-translate-y-1">
-                  <h2 className="text-lg font-semibold tracking-tight">
-                    {feature.title}
-                  </h2>
-                  <p className="mt-1 text-sm text-primary-glow">{feature.subtitle}</p>
-                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                    {feature.body}
-                  </p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </section>
+        <div className="snow-hill">
+          <section className="mx-auto max-w-6xl px-5 pb-28">
+            <div className="grid gap-6 md:grid-cols-3">
+              {features.map((feature, index) => (
+                <Reveal key={feature.title} delay={index * 120}>
+                  <article className="h-full card-surface rounded-2xl border border-border/60 p-7 transition-transform duration-300 hover:-translate-y-1">
+                    <h2 className="text-lg font-semibold tracking-tight">
+                      {feature.title}
+                    </h2>
+                    <p className="mt-1 text-sm text-primary-glow">{feature.subtitle}</p>
+                    <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                      {feature.body}
+                    </p>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+          </section>
+        </div>
       </main>
 
       <SiteFooter />
