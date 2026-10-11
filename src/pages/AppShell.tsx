@@ -1,9 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthState } from "@/hooks/useAuthState";
 import { SiteFooter } from "@/components/SiteFooter";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { PlanCard } from "@/components/PlanCard";
+import {
+  PLANS,
+  isPreviewMode,
+  listSubscriptions,
+  saveSubscription,
+  type Plan,
+  type Subscription,
+} from "@/lib/flightApi";
 
 export default function AppShell() {
   usePageMeta({
@@ -17,6 +26,29 @@ export default function AppShell() {
   useEffect(() => {
     if (!loading && !user) navigate("/signin");
   }, [loading, user, navigate]);
+
+  const [subs, setSubs] = useState<Subscription[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user?.email) return;
+    let cancelled = false;
+    listSubscriptions(user.email)
+      .then((rows) => {
+        if (!cancelled) setSubs(rows);
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err instanceof Error ? err.message : "讀取訂閱失敗。");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.email]);
+
+  async function handleSave(email: string, plan: Plan, targetPrice: number) {
+    const saved = await saveSubscription(email, plan, targetPrice);
+    setSubs((prev) => [...prev.filter((s) => s.route !== saved.route), saved]);
+  }
 
   async function handleSignOut() {
     await supabase.auth.signOut();
@@ -52,14 +84,32 @@ export default function AppShell() {
             <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
               Hi {user.email}
             </h1>
-            <div className="mt-8 card-surface rounded-2xl border border-border/60 p-8">
-              <p className="text-base leading-relaxed">
-                你的航線追蹤儀表板即將上線 — 下一個里程碑會加上訂閱航線的功能。
+            <p className="mt-3 max-w-xl text-base text-muted-foreground">
+              選一條航線、設定你願意付的價格。票價一到，我們就寄信到 {user.email}。
+            </p>
+
+            {isPreviewMode ? (
+              <p className="mt-6 max-w-xl rounded-xl border border-border bg-secondary px-4 py-3 text-sm">
+                <span className="font-semibold">預覽模式：</span>
+                後端尚未接上，設定只會暫存在這個頁面，重新整理就會消失，也不會寄出通知。
               </p>
-              <p className="mt-3 text-sm text-muted-foreground">
-                Your dashboard is coming soon. Route-subscription will be added in the
-                next milestone.
+            ) : null}
+
+            {loadError ? (
+              <p className="mt-6 max-w-xl rounded-xl border border-destructive/40 bg-destructive/15 px-4 py-3 text-sm">
+                {loadError}
               </p>
+            ) : null}
+
+            <div className="mt-8 grid gap-5 sm:grid-cols-2">
+              {PLANS.map((plan) => (
+                <PlanCard
+                  key={plan.name}
+                  plan={plan}
+                  subscription={subs.find((s) => s.route === plan.route) ?? null}
+                  onSave={(p, price) => handleSave(user.email ?? "", p, price)}
+                />
+              ))}
             </div>
           </>
         )}
