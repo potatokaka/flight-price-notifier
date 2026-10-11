@@ -51,7 +51,7 @@ export function PlanCard({ plan, subscription, onSave }: PlanCardProps) {
         <div>
           <h2 className="text-2xl font-semibold tracking-tight">{plan.label}</h2>
           <p className="mt-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            {plan.route} · 單程
+            {plan.route} · 來回
           </p>
         </div>
         {subscribed ? (
